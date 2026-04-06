@@ -304,3 +304,35 @@ flip' :: (a -> b -> c) -> b -> a -> c
 flip' f = \x y -> f y x  
 ")
 === Fold
+#hs("
+sum' :: (Num a) => [a] -> a  
+sum' xs = foldl (\acc x -> acc + x) 0 xs
+-- ou melhor
+sum' :: (Num a) => [a] -> a  
+sum' = foldl (+) 0
+maximum' :: (Ord a) => [a] -> a  
+maximum' = foldr1 (\x acc -> if x > acc then x else acc)  
+reverse' :: [a] -> [a]  
+reverse' = foldl (\acc x -> x : acc) []  
+product' :: (Num a) => [a] -> a  
+product' = foldr1 (*)  
+filter' :: (a -> Bool) -> [a] -> [a]  
+filter' p = foldr (\x acc -> if p x then x : acc else acc) []  
+head' :: [a] -> a  
+head' = foldr1 (\x _ -> x)  
+last' :: [a] -> a  
+last' = foldl1 (\_ x -> x)
+map ($ 3) [(4+), (10*), (^2), sqrt]  
+>> [7.0,30.0,9.0,1.7320508075688772] -- resposta
+")
+=== Composição de Funções
+#hs("
+(.) :: (b -> c) -> (a -> b) -> a -> c  
+f . g = \x -> f (g x)
+map (negate . abs) [5,-3,-6,7,-3,2,-19,24]  
+>> [-5,-3,-6,-7,-3,-2,-19,-24]
+map (negate . sum . tail) [[1..5],[3..6],[1..7]]  
+>> [-14,-15,-27]
+oddSquareSum :: Integer  
+oddSquareSum = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]  
+")

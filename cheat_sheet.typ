@@ -9,14 +9,21 @@
         align(right)[Lúcio Dia da Silva],
     )
 )
+#show heading: set align(center)
+#set text(8pt)
+#set par(justify:true, spacing: 0.1em)
+
 #let borda = 0.6pt + silver //none or 1pt + black
-#let hs(body) = raw(body,lang: "haskell") 
+#let hs(body) = par(
+                    spacing: 0.1em,
+                    leading: 4pt,
+                    raw(body,lang: "haskell")
+                )
 
 === List Comprehensions
 #hs("squares = [x \* x | x \<- [1..]]")
 
 === Declarando Types e Classes
-
 #table(
   stroke: borda, columns:(1fr, 3fr,),align: horizon,
   "type synonym type",
@@ -114,14 +121,12 @@
 -- Tipo Categoria
 data Categoria = Livro | Brinquedo | Escritorio
   deriving (Show, Eq)
-
 -- Tipo Produto
 data Produto = Produto {
     nome :: String,
     valor :: Double,
     categoria :: Categoria
 } deriving (Show, Eq)
-
 -- Lista de exemplos
 produtos :: [Produto]
 produtos = [
@@ -131,68 +136,171 @@ produtos = [
     Produto \"Livro B\" 40.0 Livro,
     Produto \"Boneca\" 25.0 Brinquedo
     ]
-
 -- 1. extrair: retorna lista de preços
 extrair :: [Produto] -> [Double]
 extrair ps = [valor p | p <- ps]
-
 -- 2. minValor: menor preço
 minValor :: [Produto] -> Double
 minValor ps = minimum (extrair ps)
-
 -- 3. livrEscr: remove brinquedos
 livrEscr :: [Produto] -> [Produto]
 livrEscr ps = [p | p <- ps, categoria p /= Brinquedo]
-
 -- 4. avgLivrEscr: média dos não brinquedos
 avgLivrEscr :: [Produto] -> Double
 avgLivrEscr ps =
     let lista = extrair (livrEscr ps)
     in sum lista / fromIntegral (length lista)
-
 -- 5. maxMinLivr: maior e menor preço dos livros
 maxMinLivr :: [Produto] -> (Double, Double)
 maxMinLivr ps =
     let livros = [valor p | p <- ps, categoria p == Livro]
     in (maximum livros, minimum livros)
-
 -- 6. countBrinq: quantidade de brinquedos
 countBrinq :: [Produto] -> Int
 countBrinq ps = length [p | p <- ps, categoria p == Brinquedo]
 "
 )
-
+=== Versão Folder
 #hs(
 "
 -- 1. extrair: usando map
 extrair :: [Produto] -> [Double]
 extrair = map valor
-
 -- 2. minValor: usando fold
 minValor :: [Produto] -> Double
 minValor ps = foldr1 min (map valor ps)
-
 -- 3. livrEscr: usando filter
 livrEscr :: [Produto] -> [Produto]
 livrEscr = filter (\p -> categoria p /= Brinquedo)
-
 -- 4. avgLivrEscr: usando map, filter e fold
 avgLivrEscr :: [Produto] -> Double
 avgLivrEscr ps =
     let lista = map valor (filter (\p -> categoria p /= Brinquedo) ps)
         (soma, qtd) = foldr (\x (s, c) -> (s + x, c + 1)) (0, 0) lista
     in soma / fromIntegral qtd
-
 -- 5. maxMinLivr: usando filter, map e fold
 maxMinLivr :: [Produto] -> (Double, Double)
 maxMinLivr ps =
     let livros = map valor (filter (\p -> categoria p == Livro) ps)
     in foldr1 (\x (mx, mn) -> (max x mx, min x mn))
               (map (\v -> (v, v)) livros)
-
 -- 6. countBrinq: usando filter
 countBrinq :: [Produto] -> Int
 countBrinq = foldr (\p acc -> if categoria p == Brinquedo then acc + 1 else acc) 0
 "
 )
+=== Questão 2
+Considere o tipo data Sozinho = Sozinho, crie uma instância de Monoid para este tipo.
+#hs("
+data Sozinho = Sozinho -- único valor possível monóide trivial
+instance Semigroup Sozinho where
+    Sozinho <> Sozinho = Sozinho
+instance Monoid Sozinho where
+    mempty = Sozinho
+")
+Considere o operador binário:
+#hs("
+ign :: String -> String -> String
+ign l m = m
+")
+O tipo String com esta operação ign e o elemento neutro [] formam um monóide? Justifique sua resposta.
+Queremos saber se (`String`, `ign`, `[]`) forma um monóide.
+==== Associatividade ✅
+#hs("
+ign x (ign y z) == ign (ign x y) z
+-- Lados esquerdo
+ign x (ign y z) = ign x z = z
+-- Lado direito
+ign (ign x y) z = ign y z = z
+")
+==== Elemento neutro ✘
+Para ser monóide, `[]` deve satisfazer:
+#("
+ign [] x = x  -- ✔
+ign x [] = [] -- ✘ (deveria ser x)
+")
+Logo, não satisfaz a definição de monóide.
+Operações como:
+`ign l m = m` (pega o último)
+`op l m = l` (pega o primeiro)
+não são monóides sozinhas, porque:
+➡ não possuem elemento neutro válido
+Mas podem virar monóides quando encapsuladas em tipos como:
+`Maybe`
+`First`
+`Last`
 
+==== Pattern matching
+#hs("
+factorial :: (Integral a) => a -> a  
+factorial 0 = 1  
+factorial n = n * factorial (n - 1)  
+head' :: [a] -> a  
+head' [] = error \"lista vazia\"  
+head' (x:_) = x
+tell :: (Show a) => [a] -> String  
+tell [] = \"A lista esta vazia\"  
+tell (x:[]) = \"um elemento\"  
+tell (x:y:[]) = \"dois elementos\"
+tell (x:y:_) = \"MAIS de dois elementos\"
+capital :: String -> String  
+capital \"\" = \"String vazia, oops!\"  
+capital all@(x:xs) = \"A primeira letra de \" ++ all ++ \" é \" ++ [x]  
+")
+=== Guards
+#hs("
+bmiTell :: (RealFloat a) => a -> a -> String  
+bmiTell weight height  
+    | bmi <= skinny = \"Você esta abaixo do peso!\"  
+    | bmi <= normal = \"Supostamente você esta normal.\"
+    | bmi <= fat = \"Você esta gordo! Faça uma dieta.\"
+    | otherwise = \"Você é uma baleia, meus parabéns!\"  
+    where bmi = weight / height ^ 2  
+          skinny = 18.5  
+          normal = 25.0  
+          fat = 30.0  
+")
+=== Let
+#hs("
+cylinder :: (RealFloat a) => a -> a -> a  
+cylinder r h = 
+    let sideArea = 2 * pi * r * h  
+        topArea = pi * r ^2  
+    in  sideArea + 2 * topArea
+")
+=== Recursividade
+#hs("
+maximum' :: (Ord a) => [a] -> a  
+maximum' [] = error \"maximum of empty list\"  
+maximum' [x] = x  
+maximum' (x:xs) = max x (maximum' xs)
+replicate' :: (Num i, Ord i) => i -> a -> [a]  
+replicate' n x  
+    | n <= 0    = []  
+    | otherwise = x:replicate' (n-1) x  
+take' :: (Num i, Ord i) => i -> [a] -> [a]  
+take' n _ | n <= 0   = []  
+take' _ []     = []  
+take' n (x:xs) = x : take' (n-1) xs
+reverse' :: [a] -> [a]  
+reverse' [] = []  
+reverse' (x:xs) = reverse' xs ++ [x]
+zip' :: [a] -> [b] -> [(a,b)]  
+zip' _ [] = []  
+zip' [] _ = []  
+zip' (x:xs) (y:ys) = (x,y):zip' xs ys
+quicksort :: (Ord a) => [a] -> [a]  
+quicksort [] = []  
+quicksort (x:xs) = 
+    let smallerSorted = quicksort [a | a <- xs, a <= x]  
+        biggerSorted = quicksort [a | a <- xs, a > x]  
+    in  smallerSorted ++ [x] ++ biggerSorted  
+")
+==== Lambda
+#hs("
+numLongChains :: Int  
+numLongChains = length (filter (\xs -> length xs > 15) (map chain [1..100])) 
+flip' :: (a -> b -> c) -> b -> a -> c  
+flip' f = \x y -> f y x  
+")
+=== Fold

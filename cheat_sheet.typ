@@ -16,7 +16,7 @@
 #let borda = 0.6pt + silver //none or 1pt + black
 #let hs(body) = par(
                     spacing: 0.1em,
-                    leading: 4pt,
+                    leading: 3.9pt,
                     raw(body,lang: "haskell")
                 )
 
@@ -229,7 +229,61 @@ Mas podem virar monóides quando encapsuladas em tipos como:
 `Maybe`
 `First`
 `Last`
-
+=== Questão 3
+Considere o tipo data Dupla a = Dupla a [Int]
+#hs("
+--Qual o kind de Dupla Bool?
+Dupla Bool :: * 
+--Crie uma instância de Functor para Dupla.
+instance Functor Dupla where
+    fmap f (Dupla x xs) = Dupla (f x) xs
+    --Apenas o primeiro campo é transformado (`a`).
+    --A lista `[Int]` permanece igual.
+--Qual o tipo da expressão Dupla ’5’ [0,1]?
+Dupla Char
+--Qual o tipo da expressão Dupla?
+Dupla :: a -> [Int] -> Dupla a -- é um construtor de dados:
+--Crie uma instância de Show que mostre na tela uma dupla em formato de tuplas do Haskell. Por exemplo, Dupla ’k’ [1,2,3] deverá ser mostrado (k,[1,2,3]).
+instance Show a => Show (Dupla a) where
+    show (Dupla x xs) = \"(\" ++ show x ++ \",\" ++ show xs ++ \")\"
+--Faça uma função mostra :: Dupla a -> Either [Int] a que mostra a lista de inteiros caso o seu tamanho seja maior que zero ou o campo de tipo a caso contrário.
+mostra :: Dupla a -> Either [Int] a
+mostra (Dupla x xs)
+    | null xs   = Right x
+    | otherwise = Left xs
+")
+=== Questão 4
+#hs("
+--(a) \x -> x
+a -> a --função identidade
+--(b) id . tail $ \"HELLO\"
+[Char] -- ou string, concreto não função
+--(c) 4*9
+`Num a => a` -- (*) é polimorfico typeclasse Num
+--(d) (\"FATEC\", False, 'K')
+(String,Boll,Char)
+--(e) [(False,False),(True,False),(False,True),(True,True)]
+[(Bool,Bool)]
+--(f) filter id
+filter :: (a -> Bool) -> [a] -> [a]
+id :: a -> a -- logo a = Bool
+[Bool] -> [Bool]
+")
+=== Questão 5
+Considere data () = () e complete:
+#hs("
+f1 :: (a,b) -> (b,a,a)
+f1 (a,b) = (b,a,a)
+f2 :: a -> (a,a,a,())
+f2 a = (a,a,a,())
+f3 :: Either a () -> Maybe a
+f3 (Left a) = Just a
+f3 (Right ()) = Nothing
+f4 :: (a -> b) -> (b -> z) -> (a -> z)
+f4 f g = g . f
+f5 :: (a -> b) -> (c,a) -> (c,b)
+f5 g = \(c,a) -> (c, g a)
+")
 ==== Pattern matching
 #hs("
 factorial :: (Integral a) => a -> a  

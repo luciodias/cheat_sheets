@@ -129,7 +129,7 @@ Select A.nm_Titulo, A.vl_Livro, B.vl_Medio
     and A.vl_Livro > B.vl_Medio
 
 ")
-#block(include "venn_sql.typ")
+#move(dx:-2em,block(include "venn_sql.typ"))
 #sql("                        
 /*1. Faça uma busca que mostre cd_Imovel, vl_Imovel e nm_Bairro, cujo código do vendedor seja 3.*/
 SELECT I.cd_Imovel, I.vl_Imovel, B.nm_Bairro

@@ -82,3 +82,56 @@ NULL          510000,00
 = Distinct
 - Remove linhas duplicadas
 
+= Join
+#sql("
+SELECT <colunas>
+  FROM <nome-tabelaA> 
+  INNER JOIN <nome-tabelaB>
+  ON <chaveA> = <chaveB>
+-- Equivale
+SELECT <colunas>
+  FROM <nome-tabelaA> , <nome-tabelaB>
+  WHERE <chaveA> = <chaveB>
+")
+#table(
+      stroke: none, inset:0.3em, align: (center+horizon,left+horizon,left+horizon),
+      columns: (auto,auto,auto),
+      table.header([*Join*],align(center)[*Registro da esquerda*],align(center)[*Registros da direita*]),
+      table.hline(),
+[INNER],[Somente com um registro correspondente na tabela direita],
+[Somente com um registro correspondente na tabela esquerda],
+[LEFT],[Todos os registros],[Somente com um registro correspondente na tabela esquerda],
+[RIGHT],
+[Somente um registro correspondente na tabela direita],[Todos os registros]
+)
+
+= Subquery
+- Linha
+#sql("
+--Query
+Select nm_Titulo, vl_Livro
+  From Livro
+  Where vl_Livro >
+    --Subquery
+    (Select AVG(vl_Livro) From Livro)
+")
+- Multi linha
+#sql("
+Select cd_Editora, cd_Livro, nm_Titulo, vl_Livro
+  From Livro
+  Where vl_Livro in
+    (Select Min(vl_Livro)
+      From Livro
+      Group by cd_Editora)
+")
+- Mult colunas
+#sql("
+Select A.nm_Titulo, A.vl_Livro, B.vl_Medio
+  From Livros as A,
+    (Select cd_Editora,
+      Avg(vl_Livro) as vl_Medio
+      From Livro
+      Group by cd_Editora) as B
+  Where A.cd_Editora = B.cd_Editora
+    and A.vl_Livro > B.vl_Medio
+")

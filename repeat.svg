@@ -1,0 +1,13 @@
+<svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Define the group once -->
+  <defs>
+    <g id="star-group">
+      <polygon points="25,2.5 10,49 47.5,19 2.5,19 40,49" fill="gold" stroke="orange" />
+    </g>
+  </defs>
+
+  <!-- Repeat the group using <use> -->
+  <use href="#star-group" x="20" y="20" />
+  <use href="#star-group" x="120" y="50" />
+  <use href="#star-group" x="220" y="20" />
+</svg>

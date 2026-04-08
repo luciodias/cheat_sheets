@@ -306,5 +306,6 @@ CROSS JOIN pedidos p;
 ```.text)
 
 
-#image(svg)
-#image(svg2)
+//#image(svg)
+//#image(svg2)
+#image("sql.svg")

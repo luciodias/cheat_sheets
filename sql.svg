@@ -1,0 +1,130 @@
+<svg width="1000" height="820" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial">
+
+  <style>
+    .title { font-size: 26px; font-weight: bold; fill: #1f2937; }
+    .subtitle { font-size: 14px; fill: #6b7280; }
+    .label { font-size: 13px; font-weight: bold; fill: #111827; }
+    .code { font-family: monospace; font-size: 12px; fill: #d30909ff; }
+    .box { fill:#f9fafb; stroke: #e5e7eb; stroke-width: 1; rx: 10; }
+    .azul { fill: #60a5fa; }
+    .verde { fill: #34d399; }
+  </style>
+
+  <!-- TITLE -->
+  <text x="500" y="40" text-anchor="middle" class="title">SQL JOINs Visual + Exemplos</text>
+  <text x="500" y="65" text-anchor="middle" class="subtitle">Representação gráfica + código</text>
+
+  <!-- INNER JOIN -->
+  <g>
+    <rect x="40" y="100" width="420" height="200" class="box"/>
+    <text x="250" y="120" text-anchor="middle" class="label">INNER JOIN</text>
+
+    <!-- Diagram -->
+    <circle cx="170" cy="170" r="50" class="azul"/>
+    <circle cx="230" cy="170" r="50" class="verde"/>
+    <clipPath id="clipInner">
+      <circle cx="170" cy="170" r="50"/>
+    </clipPath>
+    <circle cx="230" cy="170" r="50" fill="#059669" clip-path="url(#clipInner)"/>
+
+    <!-- SQL -->
+    <text x="60" y="230" class="code">
+SELECT c.nome, p.produto
+    </text>
+    <text x="60" y="245" class="code">
+FROM clientes c
+    </text>
+    <text x="60" y="260" class="code">
+INNER JOIN pedidos p
+    </text>
+    <text x="60" y="275" class="code">
+ON c.id = p.cliente_id;
+    </text>
+  </g>
+
+  <!-- LEFT JOIN -->
+  <g>
+    <rect x="520" y="100" width="420" height="200" class="box"/>
+    <text x="730" y="120" text-anchor="middle" class="label">LEFT JOIN</text>
+
+    <circle cx="650" cy="170" r="50" class="azul"/>
+    <circle cx="710" cy="170" r="50" fill="#d1d5db"/>
+
+    <text x="540" y="230" class="code">
+SELECT c.nome, p.produto
+    </text>
+    <text x="540" y="245" class="code">
+FROM clientes c
+    </text>
+    <text x="540" y="260" class="code">
+LEFT JOIN pedidos p
+    </text>
+    <text x="540" y="275" class="code">
+ON c.id = p.cliente_id;
+    </text>
+  </g>
+
+  <!-- RIGHT JOIN -->
+  <g>
+    <rect x="40" y="340" width="420" height="200" class="box"/>
+    <text x="250" y="360" text-anchor="middle" class="label">RIGHT JOIN</text>
+
+    <circle cx="170" cy="410" r="50" fill="#d1d5db"/>
+    <circle cx="230" cy="410" r="50" class="verde"/>
+
+    <text x="60" y="470" class="code">
+SELECT c.nome, p.produto
+    </text>
+    <text x="60" y="485" class="code">
+FROM clientes c
+    </text>
+    <text x="60" y="500" class="code">
+RIGHT JOIN pedidos p
+    </text>
+    <text x="60" y="515" class="code">
+ON c.id = p.cliente_id;
+    </text>
+  </g>
+
+  <!-- FULL JOIN -->
+  <g>
+    <rect x="520" y="340" width="420" height="200" class="box"/>
+    <text x="730" y="360" text-anchor="middle" class="label">FULL JOIN</text>
+
+    <circle cx="650" cy="410" r="50" class="azul"/>
+    <circle cx="710" cy="410" r="50" class="verde"/>
+
+    <text x="540" y="470" class="code">
+SELECT c.nome, p.produto
+    </text>
+    <text x="540" y="485" class="code">
+FROM clientes c
+    </text>
+    <text x="540" y="500" class="code">
+FULL OUTER JOIN pedidos p
+    </text>
+    <text x="540" y="515" class="code">
+ON c.id = p.cliente_id;
+    </text>
+  </g>
+
+  <!-- CROSS JOIN -->
+  <g>
+    <rect x="280" y="580" width="420" height="200" class="box"/>
+    <text x="490" y="600" text-anchor="middle" class="label">CROSS JOIN</text>
+
+    <rect x="420" y="630" width="50" height="50" class="azul"/>
+    <rect x="500" y="630" width="50" height="50" class="verde"/>
+
+    <text x="300" y="700" class="code">
+SELECT c.nome, p.produto
+    </text>
+    <text x="300" y="715" class="code">
+FROM clientes c
+    </text>
+    <text x="300" y="730" class="code">
+CROSS JOIN pedidos p;
+    </text>
+  </g>
+
+</svg>

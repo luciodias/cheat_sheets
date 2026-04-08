@@ -4,7 +4,9 @@
   center_text: "",
   author: "Lúcio Dias da Silva",
   margin: (rest: 0.5cm),
+  fonte: 8pt,
   columns: 3,
+  espacamento: 0.1em,
   doc,
 ) = {
 set page(
@@ -19,7 +21,7 @@ set page(
   )
 )
 show heading: set align(center)
-set text(8pt)
-set par(justify:true, spacing: 0.1em)
+set text(fonte)
+set par(justify:true, spacing: 0.1em, leading: espacamento)
 doc
 }

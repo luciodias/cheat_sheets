@@ -1,5 +1,5 @@
 #import "cs_template.typ": set_page
-#show: set_page.with("SQL Chear Sheet",
+#show: set_page.with("SQL Cheat Sheet",
   fonte:9.6pt,
   columns: 3,
   espacamento: 0.48em
@@ -127,7 +127,7 @@ Select A.nm_Titulo, A.vl_Livro, B.vl_Medio
       Group by cd_Editora) as B
   Where A.cd_Editora = B.cd_Editora
     and A.vl_Livro > B.vl_Medio
-    
+
 ")
 #block(include "venn_sql.typ")
 #sql("                        
